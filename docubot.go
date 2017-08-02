@@ -162,7 +162,7 @@ func (c *Client) SendMessage(message string, thread string, sender string) (*Mes
 }
 
 // SendPreviewMessage sends a preview message to docubot, this is a message that isn't stored on docubot at all
-func (c *Client) SendPreviewMessage(message string, variables map[string]interface{}, docTree DocumentTree) (*PreviewMessageResponse, error) {
+func (c *Client) SendPreviewMessage(message string, variables map[string]interface{}, docTree *DocumentTree) (*PreviewMessageResponse, error) {
 	jsonStr, _ := json.Marshal(
 		map[string]interface{}{
 			"message":   message,
@@ -198,7 +198,7 @@ func (c *Client) SendPreviewMessage(message string, variables map[string]interfa
 }
 
 // GetPreviewDoc gets a preview document that isn't stored permanently
-func (c *Client) GetPreviewDoc(variables map[string]interface{}, document Document) (io.ReadCloser, error) {
+func (c *Client) GetPreviewDoc(variables map[string]interface{}, document *Document) (io.ReadCloser, error) {
 	jsonStr, _ := json.Marshal(
 		map[string]interface{}{
 			"document":  document,
