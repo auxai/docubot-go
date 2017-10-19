@@ -126,12 +126,13 @@ type DocumentURLData struct {
 }
 
 // SendMessage sends a message to docubot
-func (c *Client) SendMessage(message string, thread string, sender string) (*MessageResponse, error) {
+func (c *Client) SendMessage(message string, thread string, sender string, docTreeID string) (*MessageResponse, error) {
 	jsonStr, _ := json.Marshal(
 		map[string]interface{}{
-			"message": message,
-			"thread":  thread,
-			"sender":  sender,
+			"message":   message,
+			"thread":    thread,
+			"sender":    sender,
+			"docTreeId": docTreeID,
 		},
 	)
 	url := fmt.Sprintf("%v/api/v1/docubot", c.DocubotAPIURLBase)
