@@ -85,9 +85,10 @@ type PreviewMessageResponse struct {
 
 // PreviewMessageResponseData is the data reveived from a preview message sent to docubot
 type PreviewMessageResponseData struct {
-	Messages  []string               `json:"messages"`
-	Complete  bool                   `json:"complete"`
-	Variables map[string]interface{} `json:"variables"`
+	Messages    []string               `json:"messages"`
+	Complete    bool                   `json:"complete"`
+	HasDocument bool                   `json:"hasDocument"`
+	Variables   map[string]interface{} `json:"variables"`
 }
 
 // MessageResponse is the response received from a message sent to docubot
@@ -98,8 +99,9 @@ type MessageResponse struct {
 
 // MessageResponseData is the data received from a message sent to docubot
 type MessageResponseData struct {
-	Messages []string `json:"messages"`
-	Complete bool     `json:"complete"`
+	Messages    []string `json:"messages"`
+	HasDocument bool     `json:"hasDocument"`
+	Complete    bool     `json:"complete"`
 }
 
 // MessageResponseMeta is the meta received from a message sent to docubot
