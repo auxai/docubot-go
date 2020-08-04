@@ -108,6 +108,7 @@ type MessageResponseData struct {
 type MessageResponseMeta struct {
 	ThreadID        string                            `json:"threadId"`
 	UserID          string                            `json:"userId"`
+	DocumentName    string                            `json:"documentName"`
 	MessageMetaData map[string]map[string]interface{} `json:"messageMetaData"`
 }
 
