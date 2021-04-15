@@ -128,6 +128,17 @@ type DocumentURLData struct {
 	URL string `json:"url"`
 }
 
+// DocumentVariablesResponse is the response received from getting a document's Variables from docubot
+type DocumentVariablesResponse struct {
+	Data DocumentVariablesData  `json:"data"`
+	Meta map[string]interface{} `json:"meta"`
+}
+
+// DocumentVariablesData is the response data received from getting a document's Variables from docubot
+type DocumentVariablesData struct {
+	Variables map[string]interface{} `json:"variables"`
+}
+
 // SendMessage sends a message to docubot
 func (c *Client) SendMessage(message string, thread string, sender string, docTreeID string) (*MessageResponse, error) {
 	jsonStr, _ := json.Marshal(
@@ -305,6 +316,43 @@ func (c *Client) GetDocubotDocURL(thread string, user string, exp time.Duration)
 		return nil, errors.New(e)
 	}
 	var response DocumentURLResponse
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	return &response, err
+}
+
+// GetDocubotVariables gets the docubot variables for the provided user in the provided thread
+func (c *Client) GetDocubotVariables(thread string, user string) (*DocumentVariablesResponse, error) {
+	params := url.Values{}
+	params.Set("user", user)
+	url := fmt.Sprintf(
+		"%v/api/v1/docubot/%v/variables?%v",
+		c.DocubotAPIURLBase,
+		thread,
+		params.Encode(),
+	)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.SetBasicAuth(c.DocubotAPIKey, c.DocubotAPISecret)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		defer resp.Body.Close()
+		var error MessageResponseError
+		json.NewDecoder(resp.Body).Decode(&error)
+		e := unknownErrorMessage
+		if len(error.Errors) > 0 {
+			e = error.Errors[0]
+		}
+		return nil, errors.New(e)
+	}
+	var response DocumentVariablesResponse
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	return &response, err
 }
